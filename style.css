@@ -128,6 +128,7 @@ header.scrolled {
     max-width: 600px;
     position: relative;
     z-index: 2;
+    left: -100px;
 }
 
 .hero h1 {
@@ -379,7 +380,7 @@ header.scrolled {
 }
 
 .feature-list li img {
-    filter: invert(80%) sepia(42%) saturate(400%) hue-rotate(348deg) brightness(103%) contrast(102%);
+    height: 30px;
     margin-right: 15px;
 }
 
@@ -777,6 +778,10 @@ footer {
         display: block;
     }
 
+    .hero-content{
+        left: 0px;
+    }
+
     .hero h1 {
         font-size: 40px;
     }
@@ -833,6 +838,9 @@ footer {
 
 .float {
     animation: float 6s ease-in-out infinite;
+    position: relative;
+    top: 30px;
+    height: 750px;
 }
 
 /* Glowing effect */
