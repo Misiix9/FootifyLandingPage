@@ -601,18 +601,19 @@ footer {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--surface);
     color: var(--primary);
     text-decoration: none;
     font-size: 16px;
     transition: all 0.3s ease;
-    border: 1px solid var(--primary);
 }
 
 .footer-social a:hover {
-    background-color: var(--primary);
-    color: #000;
     transform: translateY(-3px);
+}
+
+.footer-social img {
+    width: 30px;
+    color: var(--primary-light);
 }
 
 .footer-bottom {
