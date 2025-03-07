@@ -37,14 +37,14 @@ mobileLinks.forEach(link => {
 // Create floating soccer balls
 function createFloatingBalls() {
     const container = document.querySelector('.floating-balls');
-    const numBalls = 10;
+    const numBalls = 15; // Increased number of balls
     
     for (let i = 0; i < numBalls; i++) {
         const ball = document.createElement('div');
         ball.classList.add('ball');
         
-        // Random size
-        const size = Math.random() * 20 + 10;
+        // Random size - increased variation
+        const size = Math.random() * 30 + 10;
         ball.style.width = `${size}px`;
         ball.style.height = `${size}px`;
         
@@ -54,215 +54,335 @@ function createFloatingBalls() {
         ball.style.left = `${posX}%`;
         ball.style.top = `${posY}%`;
         
+        // Random opacity for depth effect
+        ball.style.opacity = (Math.random() * 0.15 + 0.05).toString();
+        
         // Append to container
         container.appendChild(ball);
         
-        // Animate with GSAP
+        // Animate with GSAP - more varied movement
         gsap.to(ball, {
-            x: Math.random() * 200 - 100,
-            y: Math.random() * 200 - 100,
-            duration: Math.random() * 10 + 10,
+            x: Math.random() * 300 - 150,
+            y: Math.random() * 300 - 150,
+            duration: Math.random() * 15 + 10,
             repeat: -1,
             yoyo: true,
-            ease: "sine.inOut"
+            ease: "sine.inOut",
+            delay: Math.random() * 5
         });
     }
 }
 
-// Initialize GSAP animations
+// Enhanced GSAP animations
 function initAnimations() {
-    // Hero section animations
-    gsap.to('.hero h1', {
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Hero section animations with improved sequence
+    const heroTL = gsap.timeline();
+    
+    heroTL.to('.hero h1', {
         opacity: 1,
         y: 0,
         duration: 0.8,
-        delay: 0.2
-    });
-    
-    gsap.to('.hero p', {
+        ease: "power2.out"
+    })
+    .to('.hero p', {
         opacity: 1,
         y: 0,
         duration: 0.8,
-        delay: 0.4
-    });
-    
-    gsap.to('.hero-buttons', {
+        ease: "power2.out"
+    }, "-=0.4")
+    .to('.hero-buttons', {
         opacity: 1,
         y: 0,
         duration: 0.8,
-        delay: 0.6
-    });
-    
-    gsap.to('.hero-image', {
+        ease: "power2.out",
+        stagger: 0.2
+    }, "-=0.4")
+    .to('.hero-image', {
         opacity: 1,
-        duration: 1,
-        delay: 0.8
+        y: 0, // This will create a slide-up effect
+        duration: 1.2,
+        ease: "power3.out"
+    }, "-=0.6")
+    .to('.scroll-indicator', {
+        opacity: 1,
+        duration: 0.8
+    }, "-=0.4");
+    
+    // Improved ScrollTrigger setup with better defaults
+    ScrollTrigger.defaults({
+        markers: false,
+        toggleActions: "play none none none"
     });
     
-    // ScrollTrigger for section headers
-    gsap.utils.toArray('.section-header h2').forEach(header => {
-        gsap.to(header, {
+    // Section headers with improved animations
+    gsap.utils.toArray('.section-header').forEach(header => {
+        gsap.timeline({
             scrollTrigger: {
                 trigger: header,
-                start: "top 80%",
-                toggleActions: "play none none none"
-            },
-            opacity: 1,
-            y: 0,
-            duration: 0.8
-        });
-    });
-    
-    gsap.utils.toArray('.section-header p').forEach(text => {
-        gsap.to(text, {
-            scrollTrigger: {
-                trigger: text,
-                start: "top 80%",
-                toggleActions: "play none none none"
-            },
+                start: "top 80%"
+            }
+        })
+        .to(header.querySelector('h2'), {
             opacity: 1,
             y: 0,
             duration: 0.8,
-            delay: 0.2
-        });
+            ease: "power2.out"
+        })
+        .to(header.querySelector('p'), {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.6");
     });
     
-    // Features animation
-    gsap.utils.toArray('.feature').forEach((feature, i) => {
-        gsap.to(feature, {
+    // Features animation with staggered entry
+    gsap.utils.toArray('.features').forEach(featureGrid => {
+        const features = featureGrid.querySelectorAll('.feature');
+        
+        gsap.to(features, {
             scrollTrigger: {
-                trigger: feature,
-                start: "top 85%",
-                toggleActions: "play none none none"
+                trigger: featureGrid,
+                start: "top 85%"
             },
             opacity: 1,
             y: 0,
             duration: 0.6,
-            delay: 0.1 * i
+            stagger: {
+                each: 0.15,
+                grid: "auto", // Works with grid layouts
+                from: "start"
+            },
+            ease: "power2.out"
         });
     });
     
-    // App showcase animations
-    gsap.to('.app-showcase-image', {
-        scrollTrigger: {
-            trigger: '.app-showcase',
-            start: "top 70%",
-            toggleActions: "play none none none"
-        },
-        opacity: 1,
-        x: 0,
-        duration: 0.8
-    });
-    
-    gsap.to('.app-showcase-content', {
-        scrollTrigger: {
-            trigger: '.app-showcase',
-            start: "top 70%",
-            toggleActions: "play none none none"
-        },
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        delay: 0.2
-    });
-    
-    // Feature list animation
-    gsap.utils.toArray('.feature-list li').forEach((item, i) => {
-        gsap.to(item, {
+    // App showcase section with improved animation
+    gsap.utils.toArray('.app-showcase').forEach(showcase => {
+        const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: item,
-                start: "top 85%",
-                toggleActions: "play none none none"
-            },
+                trigger: showcase,
+                start: "top 70%"
+            }
+        });
+        
+        tl.to(showcase.querySelector('.app-showcase-image'), {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power3.out"
+        })
+        .to(showcase.querySelector('.app-showcase-content'), {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power3.out"
+        }, "-=0.7")
+        .to(showcase.querySelectorAll('.feature-list li'), {
             opacity: 1,
             x: 0,
             duration: 0.5,
-            delay: 0.1 * i + 0.3
-        });
+            stagger: 0.1,
+            ease: "power2.out"
+        }, "-=0.8");
     });
     
-    // Testimonials animation
-    gsap.utils.toArray('.testimonial').forEach((testimonial, i) => {
-        gsap.to(testimonial, {
+    // Testimonials with improved staggered reveal
+    gsap.utils.toArray('.testimonials-container').forEach(container => {
+        const testimonials = container.querySelectorAll('.testimonial');
+        
+        gsap.to(testimonials, {
             scrollTrigger: {
-                trigger: '.testimonials-container',
-                start: "top 80%",
-                toggleActions: "play none none none"
+                trigger: container,
+                start: "top 80%"
             },
             opacity: 1,
             scale: 1,
-            duration: 0.6,
-            delay: 0.15 * i
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "back.out(1.2)"
         });
     });
     
-    // Download section animation
-    gsap.to('.download', {
-        scrollTrigger: {
-            trigger: '.download',
-            start: "top 80%",
-            toggleActions: "play none none none"
-        },
-        opacity: 1,
-        y: 0,
-        duration: 0.8
-    });
-    
-    // Footer animations
-    gsap.utils.toArray('.footer-column').forEach((column, i) => {
-        gsap.to(column, {
+    // Download section with improved animation
+    gsap.utils.toArray('.download').forEach(section => {
+        gsap.timeline({
             scrollTrigger: {
-                trigger: 'footer',
-                start: "top 90%",
-                toggleActions: "play none none none"
-            },
+                trigger: section,
+                start: "top 80%"
+            }
+        })
+        .to(section, {
             opacity: 1,
             y: 0,
-            duration: 0.6,
-            delay: 0.1 * i
-        });
+            duration: 0.8,
+            ease: "power2.out"
+        })
+        .to(section.querySelectorAll('.download-button'), {
+            scale: 1,
+            opacity: 1,
+            duration: 0.4,
+            stagger: 0.15,
+            ease: "back.out(1.5)"
+        }, "-=0.4");
     });
+    
+    // Footer animations with improved sequence
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: 'footer',
+            start: "top 90%"
+        }
+    })
+    .to('.footer-column', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
+    })
+    .to('.footer-bottom', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out"
+    }, "-=0.4");
 }
 
-// Auto-scroll testimonials
+// Enhanced testimonials auto-scroll
 function initTestimonialsScroll() {
     const testimonials = document.querySelector('.testimonials');
-    const testimonialWidth = document.querySelector('.testimonial').offsetWidth + 30; // Width + gap
-    const totalTestimonials = document.querySelectorAll('.testimonial').length;
     
-    gsap.to(testimonials, {
-        x: -testimonialWidth * (totalTestimonials - 2.5),
-        duration: 20,
-        ease: "none",
-        repeat: -1,
-        yoyo: true
-    });
+    if (testimonials) {
+        const testimonialItems = testimonials.querySelectorAll('.testimonial');
+        const testimonialWidth = testimonialItems[0].offsetWidth + parseInt(window.getComputedStyle(testimonialItems[0]).marginRight);
+        const totalTestimonials = testimonialItems.length;
+        
+        // Create a smoother, pausing scroll animation
+        const scrollTween = gsap.to(testimonials, {
+            x: -testimonialWidth * (totalTestimonials - 2.5),
+            duration: 30,
+            ease: "none",
+            repeat: -1,
+            yoyo: true,
+            repeatDelay: 1
+        });
+        
+        // Pause on hover
+        testimonials.addEventListener('mouseenter', () => {
+            scrollTween.pause();
+        });
+        
+        testimonials.addEventListener('mouseleave', () => {
+            scrollTween.play();
+        });
+    }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    createFloatingBalls();
-    initAnimations();
-    initTestimonialsScroll();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the scroll indicator element
+// Enhanced scroll indicator
+function setupScrollIndicator() {
     const scrollIndicator = document.querySelector('.scroll-indicator');
     
-    // Make it clickable and scroll to features section when clicked
     if (scrollIndicator) {
-        scrollIndicator.style.cursor = 'pointer'; // Change cursor to pointer to indicate it's clickable
+        scrollIndicator.style.cursor = 'pointer';
         scrollIndicator.addEventListener('click', function() {
-        // Get the features section
             const featuresSection = document.getElementById('features');
-        
+            
             if (featuresSection) {
-            // Scroll to the features section smoothly
                 featuresSection.scrollIntoView({ 
-                behavior: 'smooth' 
+                    behavior: 'smooth' 
+                });
+            }
+        });
+        
+        // Hide scroll indicator when scrolled past hero section
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > window.innerHeight * 0.5) {
+                gsap.to(scrollIndicator, {
+                    opacity: 0,
+                    duration: 0.3
+                });
+            } else {
+                gsap.to(scrollIndicator, {
+                    opacity: 1,
+                    duration: 0.3
                 });
             }
         });
     }
+}
+
+// Enhanced responsive handling
+function handleResponsiveness() {
+    // Adjust animations and layouts based on screen size
+    const updateResponsiveElements = () => {
+        const windowWidth = window.innerWidth;
+        
+        // Hide hero image on small screens
+        const heroImage = document.querySelector('.hero-image');
+        if (heroImage) {
+            if (windowWidth <= 768) {
+                heroImage.style.display = 'none';
+            } else {
+                heroImage.style.display = 'block';
+            }
+        }
+        
+        // Adjust testimonials container
+        const testimonials = document.querySelector('.testimonials');
+        if (testimonials && windowWidth <= 768) {
+            // Reset or adjust animations for mobile
+            gsap.set(testimonials, { x: 0 });
+        }
+    };
+    
+    // Run on load and resize
+    updateResponsiveElements();
+    window.addEventListener('resize', updateResponsiveElements);
+}
+
+// Handle parallax effects for added depth
+function setupParallaxEffects() {
+    // Simple parallax effect on hero section
+    window.addEventListener('mousemove', function(e) {
+        const mouseMoveX = (e.clientX / window.innerWidth) - 0.5;
+        const mouseMoveY = (e.clientY / window.innerHeight) - 0.5;
+        
+        const heroImage = document.querySelector('.hero-image');
+        if (heroImage) {
+            gsap.to(heroImage, {
+                x: mouseMoveX * 20,
+                y: mouseMoveY * 20,
+                duration: 1,
+                ease: "power2.out"
+            });
+        }
+        
+        const balls = document.querySelectorAll('.ball');
+        balls.forEach((ball, index) => {
+            const depth = 0.5 + (index % 3) * 0.2;
+            gsap.to(ball, {
+                x: mouseMoveX * 30 * depth,
+                y: mouseMoveY * 30 * depth,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+    });
+}
+
+// Initialize on DOM content loaded
+document.addEventListener('DOMContentLoaded', function() {
+    createFloatingBalls();
+    initAnimations();
+    initTestimonialsScroll();
+    setupScrollIndicator();
+    handleResponsiveness();
+    setupParallaxEffects();
+    
+    // Initialize download buttons with scale animation
+    gsap.set('.download-button', { scale: 0.9, opacity: 0.7 });
 });
