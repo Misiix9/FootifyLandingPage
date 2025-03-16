@@ -366,6 +366,79 @@ header.scrolled {
     margin-bottom: 30px;
 }
 
+/* Mosaic Animation Styles */
+.mosaic-animation-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 500px;
+    height: 800px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mosaic-column {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.mosaic-scroll-container {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.left-column .mosaic-scroll-container {
+    animation: scroll-down 40s linear infinite;
+}
+
+.right-column .mosaic-scroll-container {
+    animation: scroll-up 40s linear infinite;
+}
+
+.mosaic-item {
+    width: 100%;
+    border-radius: 15px;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+@keyframes scroll-down {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
+
+@keyframes scroll-up {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+}
+
+/* Optimizations */
+.mosaic-animation-container {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.mosaic-scroll-container {
+    will-change: transform;
+}
+
+@media (max-width: 768px) {
+    .mosaic-animation-container {
+        height: 600px;
+        max-width: 300px;
+    }
+    
+    .mosaic-item {
+        height: 150px !important;
+    }
+}
+
 .feature-list {
     list-style-type: none;
     margin-bottom: 30px;
